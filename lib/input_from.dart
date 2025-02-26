@@ -10,6 +10,9 @@ class InputFrom extends StatefulWidget {
 class _InputFromState extends State<InputFrom> {
   final _formKey = GlobalKey<FormState>();
 
+  /// TextFieldウィジェットの入力文字や選択文字を取得、変更する紀を持つ
+  final _textEditingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -20,6 +23,8 @@ class _InputFromState extends State<InputFrom> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: TextFormField(
+              /// 値を取得するためのコントローラー
+              controller: _textEditingController,
               maxLines: 5,
               decoration: const InputDecoration(
                 hintText: '文章を入力してください。',
@@ -35,13 +40,25 @@ class _InputFromState extends State<InputFrom> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
+              /// FormウィジェットからStateを取得
               final formState = _formKey.currentState!;
-              formState.validate();
+              if (!formState.validate()) {
+                return;
+              }
+              debugPrint('text = ${_textEditingController.text}');
             },
             child: const Text('変換'),
           ),
         ],
       ),
     );
+  }
+
+  /// メモリリークを防ぐために、コントローラーを破棄する
+  /// StatefulWidgetが破棄されるときに呼び出される
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
   }
 }
