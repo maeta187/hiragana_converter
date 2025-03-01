@@ -22,6 +22,7 @@ class AppNotifier extends _$AppNotifier {
   Future<void> convert(String sentence) async {
     state = const Loading();
 
+    // 2025/03/03に廃止される予定のAPIを使用
     final url = Uri.parse('https://labs.goo.ne.jp/api/hiragana');
     final headers = {'Content-Type': 'application/json'};
     final request = Request(
