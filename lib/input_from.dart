@@ -1,13 +1,20 @@
-import 'package:flutter/material.dart';
+// import 'dart:convert';
 
-class InputFrom extends StatefulWidget {
+import 'package:flutter/material.dart';
+// import 'package:hiragana_converter/data.dart';
+// import 'package:http/http.dart' as http;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hiragana_converter/app_notifier_provider.dart';
+
+// ConsumerStatefulWidgetを継承
+class InputFrom extends ConsumerStatefulWidget {
   const InputFrom({super.key});
 
   @override
-  State<InputFrom> createState() => _InputFromState();
+  ConsumerState<InputFrom> createState() => _InputFromState();
 }
 
-class _InputFromState extends State<InputFrom> {
+class _InputFromState extends ConsumerState<InputFrom> {
   final _formKey = GlobalKey<FormState>();
 
   /// TextFieldウィジェットの入力文字や選択文字を取得、変更する紀を持つ
@@ -39,13 +46,14 @@ class _InputFromState extends State<InputFrom> {
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               /// FormウィジェットからStateを取得
               final formState = _formKey.currentState!;
               if (!formState.validate()) {
                 return;
               }
-              debugPrint('text = ${_textEditingController.text}');
+              final sentence = _textEditingController.text;
+              await ref.read(appNotifierProvider.notifier).convert(sentence);
             },
             child: const Text('変換'),
           ),
